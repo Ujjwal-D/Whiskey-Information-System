@@ -62,8 +62,8 @@ public class WhiskeyDataManagerTest {
         WhiskeyDataManager wdm = new WhiskeyDataManager(null);
         wdm.setDetails(new WhiskeyData.WhiskeyDetails[]{d1, d2});
 
-        assertEquals(d1, wdm.previous());
         assertEquals(d2, wdm.previous());
         assertEquals(d1, wdm.previous());
+        assertEquals(d2, wdm.previous());
     }
 }

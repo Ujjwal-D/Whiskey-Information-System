@@ -7,6 +7,7 @@ package cqu.wis.view;
 import cqu.wis.data.WhiskeyData;
 import cqu.wis.data.WhiskeyData.WhiskeyDetails;
 import cqu.wis.roles.WhiskeyDataManager;
+import cqu.wis.roles.WhiskeyDataValidator;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -72,7 +73,8 @@ public class QueryController implements Initializable {
     @FXML
     private TextField txtBoxMaxMaltsInAgeRange;
     
-    private WhiskeyDataManager manager;
+    private WhiskeyDataManager manager; // object
+    private WhiskeyDataValidator validator; // object
 
     /**
      * Called automatically after FXML is loaded.
@@ -84,6 +86,7 @@ public class QueryController implements Initializable {
         data.connect();
         data.initialise();
         manager = new WhiskeyDataManager(data);
+        validator = new WhiskeyDataValidator();
     }
 
     /**
@@ -95,7 +98,7 @@ public class QueryController implements Initializable {
     @FXML
     private void buttonNextOnClick(ActionEvent event) {
         try {
-            WhiskeyDetails next = manager.next();
+            cqu.wis.data.WhiskeyData.WhiskeyDetails next = manager.next();
             txtBoxDistillery.setText(next.distillery());
             txtBoxAge.setText(String.valueOf(next.age()));
             txtBoxRegion.setText(next.region());
@@ -116,7 +119,7 @@ public class QueryController implements Initializable {
     @FXML
     private void buttonPreviousOnClick(ActionEvent event) {
         try {
-            WhiskeyDetails previous = manager.previous();
+            cqu.wis.data.WhiskeyData.WhiskeyDetails previous = manager.previous();
             txtBoxDistillery.setText(previous.distillery());
             txtBoxAge.setText(String.valueOf(previous.age()));
             txtBoxRegion.setText(previous.region());
@@ -166,7 +169,19 @@ public class QueryController implements Initializable {
     
     @FXML
     private void buttonMaltsInAgeRangeOnClick(ActionEvent event) {
-        this.txtAreaMessages.setText("Malts In Age Range Button: Under Development");
+        String min = txtBoxMinMaltsInAgeRange.getText();
+        String max = txtBoxMaxMaltsInAgeRange.getText();
+
+        var result = validator.checkAgeRange(min, max);
+        if (!result.valid()) {
+            txtAreaMessages.setText(result.message());
+            return;
+        }
+
+        // Us result.range().lower() and result.range().upper() for querying
+        int lower = result.range().lower();
+        int upper = result.range().upper();
+
     }
 
     /**
