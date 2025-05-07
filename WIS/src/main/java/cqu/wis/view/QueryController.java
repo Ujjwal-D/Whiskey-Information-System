@@ -4,6 +4,9 @@
  */
 package cqu.wis.view;
 
+import cqu.wis.data.WhiskeyData;
+import cqu.wis.data.WhiskeyData.WhiskeyDetails;
+import cqu.wis.roles.WhiskeyDataManager;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -68,14 +71,20 @@ public class QueryController implements Initializable {
     private Button btnExit;
     @FXML
     private TextField txtBoxMaxMaltsInAgeRange;
+    
+    private WhiskeyDataManager manager;
 
     /**
-     * Initializes the controller class.
+     * Called automatically after FXML is loaded.
+     * Initializes the WhiskeyData and WhiskeyDataManager.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
+        WhiskeyData data = new cqu.wis.data.WhiskeyData();
+        data.connect();
+        data.initialise();
+        manager = new WhiskeyDataManager(data);
+    }
 
     /**
      * This method moves to next when button is clicked
@@ -85,8 +94,18 @@ public class QueryController implements Initializable {
     
     @FXML
     private void buttonNextOnClick(ActionEvent event) {
-        this.txtAreaMessages.setText("Next Button: Under Development");
+        try {
+            cqu.wis.data.WhiskeyData.WhiskeyDetails next = manager.next();
+            txtBoxDistillery.setText(next.distillery());
+            txtBoxAge.setText(String.valueOf(next.age()));
+            txtBoxRegion.setText(next.region());
+            txtBoxPrice.setText(String.valueOf(next.price()));
+        } catch (Exception e) {
+            txtAreaMessages.setText("Error: " + e.getMessage());
+        }
     }
+
+
 
     /**
      * This method moves to previous action when button is clicked
@@ -96,8 +115,17 @@ public class QueryController implements Initializable {
     
     @FXML
     private void buttonPreviousOnClick(ActionEvent event) {
-        this.txtAreaMessages.setText("Previous Button: Under Development");
+        try {
+            cqu.wis.data.WhiskeyData.WhiskeyDetails previous = manager.previous();
+            txtBoxDistillery.setText(previous.distillery());
+            txtBoxAge.setText(String.valueOf(previous.age()));
+            txtBoxRegion.setText(previous.region());
+            txtBoxPrice.setText(String.valueOf(previous.price()));
+        } catch (Exception e) {
+            txtAreaMessages.setText("Error: " + e.getMessage());
+        }
     }
+
 
     /**
      * This method displays information of all malts when button is clicked
@@ -107,8 +135,17 @@ public class QueryController implements Initializable {
     
     @FXML
     private void buttonAllMaltsOnClick(ActionEvent event) {
-        this.txtAreaMessages.setText("All Malts Button: Under Development");
+        int count = manager.findAllMalts();
+        cqu.wis.data.WhiskeyData.WhiskeyDetails first = manager.first();
+
+        txtBoxDistillery.setText(first.distillery());
+        txtBoxAge.setText(String.valueOf(first.age()));
+        txtBoxRegion.setText(first.region());
+        txtBoxPrice.setText(String.valueOf(first.price()));
+
+        txtAreaMessages.setText("Records found: " + count);
     }
+
 
     /**
      * This method displays malts info according to region when button is clicked

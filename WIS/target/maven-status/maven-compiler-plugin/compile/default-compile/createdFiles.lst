@@ -1,3 +1,6 @@
-cqu\wis\App.class
+cqu\wis\roles\WhiskeyDataManager.class
 module-info.class
 cqu\wis\view\QueryController.class
+cqu\wis\data\WhiskeyData$WhiskeyDetails.class
+cqu\wis\data\WhiskeyData.class
+cqu\wis\App.class

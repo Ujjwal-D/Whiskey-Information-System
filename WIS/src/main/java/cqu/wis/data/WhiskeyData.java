@@ -14,68 +14,91 @@ import java.util.List;
  */
 public class WhiskeyData {
     
-    public record WhiskeyDetails(String distillery, int age, String region, int price){}
-
-    // Instance variables
     private Connection connection;
-    private PreparedStatement selectAllMaltsStatement;
+    private PreparedStatement psAllMalts;
 
-    // Constructor
-    public WhiskeyData() {
-    }
+    // SQL query to fetch all malt records
+    private final String allMaltsQuery = "SELECT * FROM SINGLEMALTS";
+    
+        /**
+     * Record to represent whiskey details.
+     * @param distillery name of the distillery
+     * @param age age of the whiskey
+     * @param region region of production
+     * @param price price of the whiskey
+     */
+    public record WhiskeyDetails(String distillery, int age, String region, int price) {}
 
-    // Establishes DB connection and prepares the SELECT statement
+
+    /**
+     * Empty constructor for WhiskeyData.
+     */
+    public WhiskeyData() {}
+
+    /**
+     * Establishes a connection to the WHISKEY database.
+     */
     public void connect() {
         try {
-            // Replace with actual database details
-            String url = "jdbc:mysql://localhost:3306/WHISKEY";
-            String user = "admin";
-            String password = "admin";
-
-            // Connect to database
-            connection = DriverManager.getConnection(url, user, password);
-
-            // Prepare the SELECT ALL MALTS statement
-            String sql = "SELECT distillery, age, region, price FROM SINGLEMALTS";
-            selectAllMaltsStatement = connection.prepareStatement(sql);
-
+            connection = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/WHISKEY", "root", "admin");
         } catch (SQLException e) {
-            System.err.println("Error connecting to database: " + e.getMessage());
+            System.err.println(e.getMessage());
+            System.exit(0);
         }
     }
 
-        // Closes the prepared statement and connection
+    /**
+     * Initializes all required prepared statements using the current connection.
+     */
+    public void initialise() {
+        try {
+            psAllMalts = connection.prepareStatement(allMaltsQuery);
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            System.exit(0);
+        }
+    }
+
+    /**
+     * Closes the current database connection.
+     */
     public void disconnect() {
         try {
-            if (selectAllMaltsStatement != null && !selectAllMaltsStatement.isClosed()) {
-                selectAllMaltsStatement.close();
-            }
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
-            }
+            connection.close();
         } catch (SQLException e) {
-            System.err.println("Error disconnecting from database: " + e.getMessage());
+            System.err.println(e.getMessage());
+            System.exit(0);
         }
+    }
+
+    /**
+     * Retrieves all malt whiskey records from the database.
+     * @return List of WhiskeyDetails objects.
+     */
+    public List<WhiskeyDetails> getAllMalts() {
+        ArrayList<WhiskeyDetails> details = new ArrayList<>();
+        try {
+            ResultSet rs = psAllMalts.executeQuery();
+            while (rs.next()) {
+                details.add(new WhiskeyDetails(
+                    rs.getString("DISTILLERY"),
+                    rs.getInt("AGE"),
+                    rs.getString("REGION"),
+                    rs.getInt("PRICE")
+                ));
+            }
+            rs.close();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            System.exit(0);
+        }
+        return details;
     }
     
-    // Executes the prepared SELECT statement and returns list of whiskey records
-    public List<WhiskeyDetails> getAllMalts() {
-        List<WhiskeyDetails> list = new ArrayList<>();
-        try (ResultSet resultSet = selectAllMaltsStatement.executeQuery()) {
-            while (resultSet.next()) {
-                String distillery = resultSet.getString("distillery");
-                int age = resultSet.getInt("age");
-                String region = resultSet.getString("region");
-                int price = resultSet.getInt("price");
-
-                list.add(new WhiskeyDetails(distillery, age, region, price));
-            }
-        } catch (SQLException e) {
-            System.err.println("Error executing getAllMalts: " + e.getMessage());
-        }
-        return list;
-    }
 }
+
+
 
 
 
