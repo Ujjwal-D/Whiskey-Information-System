@@ -66,4 +66,77 @@ public class WhiskeyDataManagerTest {
         assertEquals(d1, wdm.previous());
         assertEquals(d2, wdm.previous());
     }
+    
+    // Part 2D: Query Test
+
+    /**
+     * Tests findMaltsFromRegion with no matching region.
+     */
+    @Test
+    public void testFindMaltsFromRegionNoMatches() {
+        WhiskeyData wd = new WhiskeyData();
+        wd.connect();
+        wd.initialise();
+
+        WhiskeyDataManager wdm = new WhiskeyDataManager(wd);
+        int count = wdm.findMaltsFromRegion("UnknownRegion");
+
+        assertEquals(0, count);
+        assertNull(wdm.next());
+        wd.disconnect();
+    }
+
+    /**
+     * Tests findMaltsFromRegion with known region (e.g. Islay).
+     */
+    @Test
+    public void testFindMaltsFromRegionKnownRegion() {
+        WhiskeyData wd = new WhiskeyData();
+        wd.connect();
+        wd.initialise();
+
+        WhiskeyDataManager wdm = new WhiskeyDataManager(wd);
+        int count = wdm.findMaltsFromRegion("Islay");
+
+        assertTrue(count > 0);
+        WhiskeyData.WhiskeyDetails first = wdm.first();
+        assertNotNull(first);
+        assertEquals("Islay", first.region());
+        wd.disconnect();
+    }
+
+    /**
+     * Tests findMaltsInAgeRange with range that has results.
+     */
+    @Test
+    public void testFindMaltsInAgeRangeValidRange() {
+        WhiskeyData wd = new WhiskeyData();
+        wd.connect();
+        wd.initialise();
+
+        WhiskeyDataManager wdm = new WhiskeyDataManager(wd);
+        int count = wdm.findMaltsInAgeRange(10, 15);
+
+        assertTrue(count > 0);
+        assertNotNull(wdm.first());
+        wd.disconnect();
+    }
+
+    /**
+     * Tests findMaltsInAgeRange with a range that returns no results.
+     */
+    @Test
+    public void testFindMaltsInAgeRangeNoResults() {
+        WhiskeyData wd = new WhiskeyData();
+        wd.connect();
+        wd.initialise();
+
+        WhiskeyDataManager wdm = new WhiskeyDataManager(wd);
+        int count = wdm.findMaltsInAgeRange(1000, 2000);
+
+        assertEquals(0, count);
+        assertNull(wdm.next());
+        wd.disconnect();
+    }
 }
+

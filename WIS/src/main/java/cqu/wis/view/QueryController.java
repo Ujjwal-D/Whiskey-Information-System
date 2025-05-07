@@ -158,8 +158,29 @@ public class QueryController implements Initializable {
     
     @FXML
     private void buttonMaltsFromRegionOnClick(ActionEvent event) {
-        this.txtAreaMessages.setText("Malts From Region Button: Under Development");
+        String region = txtBoxMaltsFromRegion.getText();
+
+        var response = validator.checkRegion(region);
+        if (!response.valid()) {
+            txtAreaMessages.setText(response.message());
+            return;
+        }
+
+        int count = manager.findMaltsFromRegion(region);
+        if (count == 0) {
+            txtAreaMessages.setText("No records found for region: " + region);
+            return;
+        }
+
+        cqu.wis.data.WhiskeyData.WhiskeyDetails result = manager.first();
+        txtBoxDistillery.setText(result.distillery());
+        txtBoxAge.setText(String.valueOf(result.age()));
+        txtBoxRegion.setText(result.region());
+        txtBoxPrice.setText(String.valueOf(result.price()));
+
+        txtAreaMessages.setText("Records found for region '" + region + "': " + count);
     }
+
 
     /**
      * This method displays malts info within specified range when button is clicked
@@ -178,10 +199,22 @@ public class QueryController implements Initializable {
             return;
         }
 
-        // Us result.range().lower() and result.range().upper() for querying
         int lower = result.range().lower();
         int upper = result.range().upper();
 
+        int count = manager.findMaltsInAgeRange(lower, upper);
+        if (count == 0) {
+            txtAreaMessages.setText("No records found in age range " + lower + "–" + upper + ".");
+            return;
+        }
+
+        cqu.wis.data.WhiskeyData.WhiskeyDetails resultDetails = manager.first();
+        txtBoxDistillery.setText(resultDetails.distillery());
+        txtBoxAge.setText(String.valueOf(resultDetails.age()));
+        txtBoxRegion.setText(resultDetails.region());
+        txtBoxPrice.setText(String.valueOf(resultDetails.price()));
+
+        txtAreaMessages.setText("Records found in age range " + lower + "–" + upper + ": " + count);
     }
 
     /**

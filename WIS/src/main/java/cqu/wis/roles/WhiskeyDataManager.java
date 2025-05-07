@@ -58,6 +58,33 @@ public class WhiskeyDataManager {
         this.currentRecord = (numberOfRecords == 0) ? null : records.get(0);
         return numberOfRecords;
     }
+    
+    /**
+    * Loads all malts from a given region into memory.
+    * @param region region to filter by
+    * @return number of records found
+    */
+   public int findMaltsFromRegion(String region) {
+       records = wd.getMaltsFromRegion(region);
+       numberOfRecords = records.size();
+       currentIndex = (numberOfRecords == 0) ? -1 : 0;
+       currentRecord = (numberOfRecords == 0) ? null : records.get(0);
+       return numberOfRecords;
+   }
+   
+   /**
+    * Loads all malts within the given age range into memory.
+    * @param lower lower age bound
+    * @param upper upper age bound
+    * @return number of records found
+    */
+   public int findMaltsInAgeRange(int lower, int upper) {
+       records = wd.getMaltsInAgeRange(lower, upper);
+       numberOfRecords = records.size();
+       currentIndex = (numberOfRecords == 0) ? -1 : 0;
+       currentRecord = (numberOfRecords == 0) ? null : records.get(0);
+       return numberOfRecords;
+   }
 
     /**
      * Returns the first record.
