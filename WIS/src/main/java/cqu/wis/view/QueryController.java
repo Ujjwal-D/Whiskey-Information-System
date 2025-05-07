@@ -95,7 +95,7 @@ public class QueryController implements Initializable {
     @FXML
     private void buttonNextOnClick(ActionEvent event) {
         try {
-            cqu.wis.data.WhiskeyData.WhiskeyDetails next = manager.next();
+            WhiskeyDetails next = manager.next();
             txtBoxDistillery.setText(next.distillery());
             txtBoxAge.setText(String.valueOf(next.age()));
             txtBoxRegion.setText(next.region());
@@ -116,7 +116,7 @@ public class QueryController implements Initializable {
     @FXML
     private void buttonPreviousOnClick(ActionEvent event) {
         try {
-            cqu.wis.data.WhiskeyData.WhiskeyDetails previous = manager.previous();
+            WhiskeyDetails previous = manager.previous();
             txtBoxDistillery.setText(previous.distillery());
             txtBoxAge.setText(String.valueOf(previous.age()));
             txtBoxRegion.setText(previous.region());
@@ -136,7 +136,7 @@ public class QueryController implements Initializable {
     @FXML
     private void buttonAllMaltsOnClick(ActionEvent event) {
         int count = manager.findAllMalts();
-        cqu.wis.data.WhiskeyData.WhiskeyDetails first = manager.first();
+        WhiskeyDetails first = manager.first();
 
         txtBoxDistillery.setText(first.distillery());
         txtBoxAge.setText(String.valueOf(first.age()));

@@ -6,6 +6,8 @@ package cqu.wis.roles;
 
 import cqu.wis.data.WhiskeyData;
 import cqu.wis.data.WhiskeyData.WhiskeyDetails;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -16,9 +18,11 @@ import java.util.List;
  */
 public class WhiskeyDataManager {
 
-    private WhiskeyData data;
-    private List<WhiskeyDetails> records;
-    private int currentIndex;
+    private WhiskeyData data;   // object creation
+    private List<WhiskeyDetails> records;   // holds records
+    private int numberOfRecords;    //counts number of records
+    private int currentIndex;   //holds count of current index
+    private WhiskeyDetails currentRecord;   //holds current record
 
     /**
      * Constructor assigns a reference to the data access object.
@@ -32,15 +36,15 @@ public class WhiskeyDataManager {
      * Opens database connection and prepares statements.
      */
     public void connect() {
-        data.connect();
-        data.initialise();
+        data.connect(); // connection 
+        data.initialise();  // initialisation
     }
 
     /**
      * Closes database connection.
      */
     public void disconnect() {
-        data.disconnect();
+        data.disconnect();  // disconnection
     }
 
     /**
@@ -68,28 +72,40 @@ public class WhiskeyDataManager {
      * @return WhiskeyDetails object
      */
     public WhiskeyDetails next() {
-        if (records == null || records.isEmpty()) {
-            throw new IllegalStateException("No whiskey records loaded. Call findAllMalts() first.");
-        }
-        if (currentIndex < records.size() - 1) {
-            currentIndex++;
-        }
-        return records.get(currentIndex);
+        if (records == null || records.isEmpty()) return null;
+        
+        currentIndex = (currentIndex + 1) % numberOfRecords;
+        currentRecord = records.get(currentIndex);
+        return currentRecord;
     }
 
     /**
      * Returns the previous whiskey record.
      * If already at the start, returns the first record.
+     * 
      * @return WhiskeyDetails object
      */
     public WhiskeyDetails previous() {
-        if (records == null || records.isEmpty()) {
-            throw new IllegalStateException("No whiskey records loaded. Call findAllMalts() first.");
-        }
-        if (currentIndex > 0) {
-            currentIndex--;
-        }
-        return records.get(currentIndex);
+        if (records == null || records.isEmpty()) return null;
+        
+        
+        currentIndex = (currentIndex - 1 + numberOfRecords) % numberOfRecords;
+        currentRecord = records.get(currentIndex);
+        return currentRecord;
     }
+    
+    /**
+    * Sets whiskey details manually for unit testing purposes.
+    *
+    * @param details an array of WhiskeyDetails to load
+    */
+   public void setDetails(WhiskeyData.WhiskeyDetails[] details) {
+       List<WhiskeyData.WhiskeyDetails> list = Arrays.asList(details);
+       records = new ArrayList<>(list);
+       numberOfRecords = records.size();
+       currentIndex = (numberOfRecords == 0) ? -1 : -1; //  no record selected at first
+       currentRecord = null;
+   }
+
 }
 
