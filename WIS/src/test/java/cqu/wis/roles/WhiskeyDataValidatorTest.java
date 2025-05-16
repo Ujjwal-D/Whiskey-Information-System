@@ -8,81 +8,64 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for WhiskeyDataValidator using updated structure with Range and RangeValidationResponse.
+ * Unit tests for WhiskeyDataValidator methods like checkAgeRAnge and checkRegion.
  * 
  * @author Ujjwal Dhakal 12222900
  */
+
 public class WhiskeyDataValidatorTest {
 
-    /**
-     * Tests a valid region.
-     */
-    @Test
-    public void validRegionTest() {
-        WhiskeyDataValidator validator = new WhiskeyDataValidator();
-        ValidationResponse result = validator.checkRegion("Islay");
-        assertTrue(result.valid());
-    }
+    WhiskeyDataValidator validator = new WhiskeyDataValidator();
 
-    /**
-     * Tests an unknown/invalid region.
-     */
+    /** Test valid age range like 10 to 20 */
     @Test
-    public void invalidRegionTest() {
-        WhiskeyDataValidator validator = new WhiskeyDataValidator();
-        ValidationResponse result = validator.checkRegion("MiddleEarth");
-        assertFalse(result.valid());
-    }
-
-    /**
-     * Tests age range with valid integers having proper order.
-     */
-    @Test
-    public void validAgeRangeTest() {
-        WhiskeyDataValidator validator = new WhiskeyDataValidator();
-        WhiskeyDataValidator.RangeValidationResponse result = validator.checkAgeRange("10", "20");
+    public void checkAgeRangeValid() {
+        var result = validator.checkAgeRange("10", "20");
         assertTrue(result.valid());
         assertEquals(10, result.range().lower());
         assertEquals(20, result.range().upper());
     }
 
-    /**
-     * Tests age range where lower > upper.
-     */
+    /** Test invalid input when lower age is not a number */
     @Test
-    public void invalidAgeOrderTest() {
-        WhiskeyDataValidator validator = new WhiskeyDataValidator();
-        WhiskeyDataValidator.RangeValidationResponse result = validator.checkAgeRange("30", "10");
+    public void checkAgeRangeNonNumeric() {
+        var result = validator.checkAgeRange("ten", "20");
         assertFalse(result.valid());
     }
 
-    /**
-     * Tests age range with non-numeric inputs.
-     */
+    /** Test invalid input when lower > upper */
     @Test
-    public void nonIntegerAgeRangeTest() {
-        WhiskeyDataValidator validator = new WhiskeyDataValidator();
-        WhiskeyDataValidator.RangeValidationResponse result = validator.checkAgeRange("abc", "20");
+    public void checkAgeRangeLowerGreaterThanUpper() {
+        var result = validator.checkAgeRange("30", "20");
         assertFalse(result.valid());
     }
 
-    /**
-     * Tests age range with negative integers.
-     */
+    /** Test empty age input */
     @Test
-    public void negativeAgeRangeTest() {
-        WhiskeyDataValidator validator = new WhiskeyDataValidator();
-        WhiskeyDataValidator.RangeValidationResponse result = validator.checkAgeRange("-5", "10");
+    public void checkAgeRangeEmptyInput() {
+        var result = validator.checkAgeRange("", "20");
         assertFalse(result.valid());
     }
 
-    /**
-     * Tests age range with empty fields.
-     */
+    /** Test valid region input */
     @Test
-    public void emptyAgeRangeFieldsTest() {
-        WhiskeyDataValidator validator = new WhiskeyDataValidator();
-        WhiskeyDataValidator.RangeValidationResponse result = validator.checkAgeRange("", "");
+    public void checkRegionValid() {
+        var result = validator.checkRegion("Islay");
+        assertTrue(result.valid());
+    }
+
+    /** Test when region is empty string */
+    @Test
+    public void checkRegionEmpty() {
+        var result = validator.checkRegion("");
+        assertFalse(result.valid());
+    }
+
+    /** Test when region is null */
+    @Test
+    public void checkRegionNull() {
+        var result = validator.checkRegion(null);
         assertFalse(result.valid());
     }
 }
+

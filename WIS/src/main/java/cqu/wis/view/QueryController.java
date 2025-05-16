@@ -84,7 +84,6 @@ public class QueryController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         WhiskeyData data = new cqu.wis.data.WhiskeyData();
         data.connect();
-        data.initialise();
         manager = new WhiskeyDataManager(data);
         validator = new WhiskeyDataValidator();
     }
@@ -99,6 +98,10 @@ public class QueryController implements Initializable {
     private void buttonNextOnClick(ActionEvent event) {
         try {
             cqu.wis.data.WhiskeyData.WhiskeyDetails next = manager.next();
+            if (next == null) {
+                txtAreaMessages.setText("No records loaded. Please load records first.");
+                return;
+            }
             txtBoxDistillery.setText(next.distillery());
             txtBoxAge.setText(String.valueOf(next.age()));
             txtBoxRegion.setText(next.region());
@@ -120,6 +123,10 @@ public class QueryController implements Initializable {
     private void buttonPreviousOnClick(ActionEvent event) {
         try {
             cqu.wis.data.WhiskeyData.WhiskeyDetails previous = manager.previous();
+            if (previous == null) {
+                txtAreaMessages.setText("No records loaded. Please load records first.");
+                return;
+            }
             txtBoxDistillery.setText(previous.distillery());
             txtBoxAge.setText(String.valueOf(previous.age()));
             txtBoxRegion.setText(previous.region());

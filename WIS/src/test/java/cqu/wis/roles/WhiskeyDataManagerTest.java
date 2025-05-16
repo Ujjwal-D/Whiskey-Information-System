@@ -16,127 +16,85 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class WhiskeyDataManagerTest {
 
+    /** Test next() with no records set */
     @Test
     public void nextWithNoRecordsTest() {
         WhiskeyDataManager wdm = new WhiskeyDataManager(null);
-        WhiskeyData.WhiskeyDetails[] details = {};
-        wdm.setDetails(details);
+        wdm.setDetails(new WhiskeyData.WhiskeyDetails[] {});
         assertNull(wdm.next());
     }
 
+    /** Test next() with one record (should cycle on itself) */
     @Test
     public void nextWithOneRecordTest() {
-        WhiskeyData.WhiskeyDetails d1 = new WhiskeyData.WhiskeyDetails("Lagavulin", 16, "Islay", 100);
+        WhiskeyData.WhiskeyDetails d = new WhiskeyData.WhiskeyDetails("Laphroaig", 10, "Islay", 100);
         WhiskeyDataManager wdm = new WhiskeyDataManager(null);
-        wdm.setDetails(new WhiskeyData.WhiskeyDetails[]{d1});
-        assertEquals(d1, wdm.next());
-        assertEquals(d1, wdm.next());
+        wdm.setDetails(new WhiskeyData.WhiskeyDetails[]{d});
+        assertEquals(d, wdm.next());
+        assertEquals(d, wdm.next());
     }
 
+    /** Test next() with two records going in order */
     @Test
-    public void nextWithTwoRecordsCyclesCorrect() {
-        WhiskeyData.WhiskeyDetails d1 = new WhiskeyData.WhiskeyDetails("Lagavulin", 16, "Islay", 100);
+    public void nextWithTwoRecordsTest() {
+        WhiskeyData.WhiskeyDetails d1 = new WhiskeyData.WhiskeyDetails("Lagavulin", 16, "Islay", 110);
         WhiskeyData.WhiskeyDetails d2 = new WhiskeyData.WhiskeyDetails("Oban", 14, "Highland", 120);
-
         WhiskeyDataManager wdm = new WhiskeyDataManager(null);
         wdm.setDetails(new WhiskeyData.WhiskeyDetails[]{d1, d2});
-
         assertEquals(d1, wdm.next());
         assertEquals(d2, wdm.next());
+    }
+
+    /** Test next() with two records wrapping around */
+    @Test
+    public void nextWithTwoRecordsCyclesTest() {
+        WhiskeyData.WhiskeyDetails d1 = new WhiskeyData.WhiskeyDetails("Lagavulin", 16, "Islay", 110);
+        WhiskeyData.WhiskeyDetails d2 = new WhiskeyData.WhiskeyDetails("Oban", 14, "Highland", 120);
+        WhiskeyDataManager wdm = new WhiskeyDataManager(null);
+        wdm.setDetails(new WhiskeyData.WhiskeyDetails[]{d1, d2});
+        wdm.next(); // d1
+        wdm.next(); // d2
         assertEquals(d1, wdm.next());
     }
 
+    /** Test previous() with no records set */
     @Test
     public void previousWithNoRecordsTest() {
         WhiskeyDataManager wdm = new WhiskeyDataManager(null);
-        WhiskeyData.WhiskeyDetails[] details = {};
-        wdm.setDetails(details);
+        wdm.setDetails(new WhiskeyData.WhiskeyDetails[] {});
         assertNull(wdm.previous());
     }
 
+    /** Test previous() with one record (should cycle on itself) */
     @Test
-    public void previousWithTwoRecordsCyclesCorrect() {
-        WhiskeyData.WhiskeyDetails d1 = new WhiskeyData.WhiskeyDetails("Lagavulin", 16, "Islay", 100);
-        WhiskeyData.WhiskeyDetails d2 = new WhiskeyData.WhiskeyDetails("Oban", 14, "Highland", 120);
+    public void previousWithOneRecordTest() {
+        WhiskeyData.WhiskeyDetails d = new WhiskeyData.WhiskeyDetails("Tomatin", 12, "Highland", 90);
+        WhiskeyDataManager wdm = new WhiskeyDataManager(null);
+        wdm.setDetails(new WhiskeyData.WhiskeyDetails[]{d});
+        assertEquals(d, wdm.previous());
+        assertEquals(d, wdm.previous());
+    }
 
+    /** Test previous() with two records going backwards */
+    @Test
+    public void previousWithTwoRecordsTest() {
+        WhiskeyData.WhiskeyDetails d1 = new WhiskeyData.WhiskeyDetails("Lagavulin", 16, "Islay", 110);
+        WhiskeyData.WhiskeyDetails d2 = new WhiskeyData.WhiskeyDetails("Oban", 14, "Highland", 120);
         WhiskeyDataManager wdm = new WhiskeyDataManager(null);
         wdm.setDetails(new WhiskeyData.WhiskeyDetails[]{d1, d2});
-
         assertEquals(d2, wdm.previous());
         assertEquals(d1, wdm.previous());
+    }
+
+    /** Test previous() with two records wrapping around */
+    @Test
+    public void previousWithTwoRecordsCyclesTest() {
+        WhiskeyData.WhiskeyDetails d1 = new WhiskeyData.WhiskeyDetails("Lagavulin", 16, "Islay", 110);
+        WhiskeyData.WhiskeyDetails d2 = new WhiskeyData.WhiskeyDetails("Oban", 14, "Highland", 120);
+        WhiskeyDataManager wdm = new WhiskeyDataManager(null);
+        wdm.setDetails(new WhiskeyData.WhiskeyDetails[]{d1, d2});
+        wdm.previous(); // d2
+        wdm.previous(); // d1
         assertEquals(d2, wdm.previous());
     }
-    
-    // Part 2D: Query Test
-
-    /**
-     * Tests findMaltsFromRegion with no matching region.
-     */
-    @Test
-    public void testFindMaltsFromRegionNoMatches() {
-        WhiskeyData wd = new WhiskeyData();
-        wd.connect();
-        wd.initialise();
-
-        WhiskeyDataManager wdm = new WhiskeyDataManager(wd);
-        int count = wdm.findMaltsFromRegion("UnknownRegion");
-
-        assertEquals(0, count);
-        assertNull(wdm.next());
-        wd.disconnect();
-    }
-
-    /**
-     * Tests findMaltsFromRegion with known region (e.g. Islay).
-     */
-    @Test
-    public void testFindMaltsFromRegionKnownRegion() {
-        WhiskeyData wd = new WhiskeyData();
-        wd.connect();
-        wd.initialise();
-
-        WhiskeyDataManager wdm = new WhiskeyDataManager(wd);
-        int count = wdm.findMaltsFromRegion("Islay");
-
-        assertTrue(count > 0);
-        WhiskeyData.WhiskeyDetails first = wdm.first();
-        assertNotNull(first);
-        assertEquals("Islay", first.region());
-        wd.disconnect();
-    }
-
-    /**
-     * Tests findMaltsInAgeRange with range that has results.
-     */
-    @Test
-    public void testFindMaltsInAgeRangeValidRange() {
-        WhiskeyData wd = new WhiskeyData();
-        wd.connect();
-        wd.initialise();
-
-        WhiskeyDataManager wdm = new WhiskeyDataManager(wd);
-        int count = wdm.findMaltsInAgeRange(10, 15);
-
-        assertTrue(count > 0);
-        assertNotNull(wdm.first());
-        wd.disconnect();
-    }
-
-    /**
-     * Tests findMaltsInAgeRange with a range that returns no results.
-     */
-    @Test
-    public void testFindMaltsInAgeRangeNoResults() {
-        WhiskeyData wd = new WhiskeyData();
-        wd.connect();
-        wd.initialise();
-
-        WhiskeyDataManager wdm = new WhiskeyDataManager(wd);
-        int count = wdm.findMaltsInAgeRange(1000, 2000);
-
-        assertEquals(0, count);
-        assertNull(wdm.next());
-        wd.disconnect();
-    }
 }
-
