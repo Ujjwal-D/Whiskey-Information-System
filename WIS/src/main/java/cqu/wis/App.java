@@ -1,11 +1,16 @@
 package cqu.wis;
 
+import cqu.wis.data.UserData;
 import cqu.wis.data.WhiskeyData;
 import cqu.wis.roles.SceneCoordinator;
 import cqu.wis.roles.WhiskeyDataManager;
 import cqu.wis.roles.WhiskeyDataValidator;
 import cqu.wis.view.QueryController;
 import cqu.wis.roles.SceneCoordinator.SceneKey;
+import cqu.wis.roles.UserDataManager;
+import cqu.wis.roles.UserDataValidator;
+import cqu.wis.view.LoginController;
+import cqu.wis.view.PasswordController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -22,46 +27,51 @@ import java.io.IOException;
 
 public class App extends Application {
 
-    /**
-     * JavaFX application starts
-     */
     @Override
     public void start(Stage stage) {
         SceneCoordinator sc = new SceneCoordinator(stage);
 
         try {
-            // Create backend components
+            // Backend instances
             WhiskeyData wd = new WhiskeyData();
             WhiskeyDataManager wdm = new WhiskeyDataManager(wd);
             WhiskeyDataValidator wdv = new WhiskeyDataValidator();
 
-            // Connect to database
+            UserData ud = new UserData();
+            UserDataManager udm = new UserDataManager(ud);
+            UserDataValidator udv = new UserDataValidator();
+
             wd.connect();
+            ud.connect();
 
-            // create scene
-            Scene qs = makeScene(SceneKey.QUERY);
+            // Login Scene
+            Scene loginScene = makeScene(SceneKey.LOGIN);
+            LoginController lc = (LoginController) loginScene.getUserData();
+            lc.inject(sc, udm, udv);
+            sc.addScene(SceneKey.LOGIN, loginScene);
 
-            // Injection
-            QueryController qc = (QueryController) qs.getUserData();
+            // Password Scene
+            Scene passwordScene = makeScene(SceneKey.PASSWORD);
+
+            PasswordController pc = (PasswordController) passwordScene.getUserData();
+            pc.inject(sc, udm, udv);
+            sc.addScene(SceneKey.PASSWORD, passwordScene);
+
+            // Query Scene
+            Scene queryScene = makeScene(SceneKey.QUERY);
+            QueryController qc = (QueryController) queryScene.getUserData();
             qc.inject(sc, wdm, wdv);
+            sc.addScene(SceneKey.QUERY, queryScene);
 
-            // Register scene
-            sc.addScene(SceneKey.QUERY, qs);
         } catch (Exception e) {
-            System.err.println("Error during startup: " + e.getMessage());
+            System.err.println("Startup Error: " + e.getMessage());
             System.exit(0);
         }
 
-        // Step 6: Show scene
-        sc.start();
+        // Start at login scene as per Phase 4
+        sc.setScene(SceneKey.LOGIN);
     }
 
-    /**
-     * Dynamically loads scene based on SceneKey enum
-     * @param key scene key
-     * @return JavaFX scene
-     * @throws Exception if loading fails
-     */
     private static Scene makeScene(SceneKey key) throws Exception {
         String fxml = "/cqu/wis/view/" + key.name().toLowerCase() + ".fxml";
         FXMLLoader loader = new FXMLLoader(App.class.getResource(fxml));
@@ -70,10 +80,8 @@ public class App extends Application {
         return scene;
     }
 
-    /**
-     *  entry point
-     */
     public static void main(String[] args) {
         launch();
     }
-}  
+}
+  

@@ -18,7 +18,7 @@ public class SceneCoordinator {
 
     /** Enum representing keys for each scene. */
     public static enum SceneKey {
-        QUERY // More scenes like LOGIN, PASSWORD will be added in future
+        LOGIN, PASSWORD, QUERY // More scenes like LOGIN, PASSWORD will be added in future
     }
 
     private Stage stage; // The main stage used by the application
