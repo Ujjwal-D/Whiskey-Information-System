@@ -4,10 +4,13 @@
  */
 package cqu.wis.view;
 
+import cqu.wis.data.UserData.UserDetails;
 import cqu.wis.roles.SceneCoordinator;
 import cqu.wis.roles.UserDataManager;
 import cqu.wis.roles.UserDataValidator;
+import cqu.wis.roles.ValidationResponse;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -69,7 +72,21 @@ public class LoginController implements Initializable {
     
     @FXML
     private void buttonLoginOnClick(ActionEvent event) {
-        sc.setScene(SceneCoordinator.SceneKey.QUERY);
+        String username = txtBoxUsername.getText();
+        String password = txtBoxPassword.getText();
+
+        // Step 1: Check for field presence
+        ValidationResponse fieldCheck = udv.checkForFieldsPresent(username, password);
+        if (!fieldCheck.valid()) {
+            txtAreaMessages.setText(fieldCheck.message());
+            return;
+        }
+
+        // Step 2: Check credentials (Phase 5 requirement)
+        UserDetails user = udm.findUser(username);
+        ValidationResponse credentialCheck = udv.checkCurrentDetails(user, username, password);
+        txtAreaMessages.setText(credentialCheck.message());
+
     }
 
     @FXML
