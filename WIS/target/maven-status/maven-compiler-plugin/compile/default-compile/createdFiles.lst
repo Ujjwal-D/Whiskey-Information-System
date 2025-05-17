@@ -1,10 +1,12 @@
 cqu\wis\roles\WhiskeyDataManager.class
 cqu\wis\roles\WhiskeyDataValidator.class
+cqu\wis\data\WhiskeyData.class
+cqu\wis\roles\ValidationResponse.class
+cqu\wis\App.class
+cqu\wis\roles\SceneCoordinator.class
 module-info.class
 cqu\wis\view\QueryController.class
 cqu\wis\data\WhiskeyData$WhiskeyDetails.class
-cqu\wis\data\WhiskeyData.class
-cqu\wis\roles\ValidationResponse.class
+cqu\wis\roles\SceneCoordinator$SceneKey.class
 cqu\wis\roles\WhiskeyDataValidator$RangeValidationResponse.class
-cqu\wis\App.class
 cqu\wis\roles\WhiskeyDataValidator$Range.class

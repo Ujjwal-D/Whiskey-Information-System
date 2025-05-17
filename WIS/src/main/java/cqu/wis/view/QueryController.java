@@ -6,6 +6,7 @@ package cqu.wis.view;
 
 import cqu.wis.data.WhiskeyData;
 import cqu.wis.data.WhiskeyData.WhiskeyDetails;
+import cqu.wis.roles.SceneCoordinator;
 import cqu.wis.roles.WhiskeyDataManager;
 import cqu.wis.roles.WhiskeyDataValidator;
 import java.net.URL;
@@ -75,19 +76,28 @@ public class QueryController implements Initializable {
     
     private WhiskeyDataManager manager; // object
     private WhiskeyDataValidator validator; // object
+    private SceneCoordinator coordinator; //object
 
     /**
      * Called automatically after FXML is loaded.
-     * Initializes the WhiskeyData and WhiskeyDataManager.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        WhiskeyData data = new cqu.wis.data.WhiskeyData();
-        data.connect();
-        manager = new WhiskeyDataManager(data);
-        validator = new WhiskeyDataValidator();
+        // Initialization
     }
-
+    
+    /**
+     * Injects dependencies into the controller.
+     * @param sc scene coordinator
+     * @param wdm data manager
+     * @param wdv data validator
+     */
+    public void inject(SceneCoordinator sc, WhiskeyDataManager wdm, WhiskeyDataValidator wdv) {
+        this.coordinator = sc;
+        this.manager = wdm;
+        this.validator = wdv;
+    }
+    
     /**
      * This method moves to next when button is clicked
      * 
@@ -97,7 +107,7 @@ public class QueryController implements Initializable {
     @FXML
     private void buttonNextOnClick(ActionEvent event) {
         try {
-            cqu.wis.data.WhiskeyData.WhiskeyDetails next = manager.next();
+            WhiskeyDetails next = manager.next();
             if (next == null) {
                 txtAreaMessages.setText("No records loaded. Please load records first.");
                 return;
@@ -122,7 +132,7 @@ public class QueryController implements Initializable {
     @FXML
     private void buttonPreviousOnClick(ActionEvent event) {
         try {
-            cqu.wis.data.WhiskeyData.WhiskeyDetails previous = manager.previous();
+            WhiskeyDetails previous = manager.previous();
             if (previous == null) {
                 txtAreaMessages.setText("No records loaded. Please load records first.");
                 return;
@@ -179,7 +189,7 @@ public class QueryController implements Initializable {
             return;
         }
 
-        cqu.wis.data.WhiskeyData.WhiskeyDetails result = manager.first();
+        WhiskeyDetails result = manager.first();
         txtBoxDistillery.setText(result.distillery());
         txtBoxAge.setText(String.valueOf(result.age()));
         txtBoxRegion.setText(result.region());
@@ -215,7 +225,7 @@ public class QueryController implements Initializable {
             return;
         }
 
-        cqu.wis.data.WhiskeyData.WhiskeyDetails resultDetails = manager.first();
+        WhiskeyDetails resultDetails = manager.first();
         txtBoxDistillery.setText(resultDetails.distillery());
         txtBoxAge.setText(String.valueOf(resultDetails.age()));
         txtBoxRegion.setText(resultDetails.region());
