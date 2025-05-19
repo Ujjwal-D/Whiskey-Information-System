@@ -25,7 +25,7 @@ import javafx.scene.control.TextField;
 /**
  * FXML Controller class
  *
- * @author Ujjwal
+ * @author Ujjwal Dhakal 12222900
  */
 public class QueryController implements Initializable {
 
@@ -79,7 +79,10 @@ public class QueryController implements Initializable {
     private SceneCoordinator coordinator; //object
 
     /**
-     * Called automatically after FXML is loaded.
+     * Initializes the controller class. Automatically called.
+     * 
+     * @param url location to resolve relative path for root object, null if not present
+     * @param rb resources to localize root object, null if not present
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -101,7 +104,7 @@ public class QueryController implements Initializable {
     /**
      * This method moves to next when button is clicked
      * 
-     * @param event click event of button
+     * @param event click event of button Next
      */
     
     @FXML
@@ -126,7 +129,7 @@ public class QueryController implements Initializable {
     /**
      * This method moves to previous action when button is clicked
      * 
-     * @param event click event of button
+     * @param event click event of button Previous
      */ 
     
     @FXML
@@ -150,7 +153,7 @@ public class QueryController implements Initializable {
     /**
      * This method displays information of all malts when button is clicked
      * 
-     * @param event click event of button
+     * @param event click event of button All Malts
      */
     
     @FXML
@@ -170,7 +173,7 @@ public class QueryController implements Initializable {
     /**
      * This method displays malts info according to region when button is clicked
      * 
-     * @param event click event of button
+     * @param event click event of button Malts from Region
      */
     
     @FXML
@@ -202,7 +205,7 @@ public class QueryController implements Initializable {
     /**
      * This method displays malts info within specified range when button is clicked
      * 
-     * @param event click event of button
+     * @param event click event of button Malts in Age Range
      */
     
     @FXML
@@ -237,7 +240,7 @@ public class QueryController implements Initializable {
     /**
      * This method clears all the text input and output streams in GUI
      * 
-     * @param event click event of the button
+     * @param event click event of the button Clear
      */
     
     @FXML
@@ -255,7 +258,7 @@ public class QueryController implements Initializable {
     /**
      * This method asks for the confirmation to exit 
      * 
-     * @param event click event of button
+     * @param event click event of button Exit
      */
     
     @FXML

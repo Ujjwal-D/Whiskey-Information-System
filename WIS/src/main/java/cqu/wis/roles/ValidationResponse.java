@@ -7,6 +7,8 @@ package cqu.wis.roles;
 /**
  * A record representing the result of a validation operation.
  * 
+ * @author Ujjwal Dhakal 12222900
+ * 
  * @param valid whether the input was valid
  * @param message validation error or success message
  */

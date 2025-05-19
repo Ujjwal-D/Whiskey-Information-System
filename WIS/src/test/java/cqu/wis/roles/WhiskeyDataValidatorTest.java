@@ -17,7 +17,9 @@ public class WhiskeyDataValidatorTest {
 
     WhiskeyDataValidator validator = new WhiskeyDataValidator();
 
-    /** Test valid age range like 10 to 20 */
+    /** 
+     * Test valid age range like 10 to 20 
+     */
     @Test
     public void checkAgeRangeValid() {
         var result = validator.checkAgeRange("10", "20");
@@ -26,45 +28,84 @@ public class WhiskeyDataValidatorTest {
         assertEquals(20, result.range().upper());
     }
 
-    /** Test invalid input when lower age is not a number */
+    /** 
+     * Test invalid input when lower age is not a number 
+     */
     @Test
     public void checkAgeRangeNonNumeric() {
         var result = validator.checkAgeRange("ten", "20");
         assertFalse(result.valid());
     }
 
-    /** Test invalid input when lower > upper */
+    /** 
+     * Test invalid input when lower > upper 
+     */
     @Test
     public void checkAgeRangeLowerGreaterThanUpper() {
         var result = validator.checkAgeRange("30", "20");
         assertFalse(result.valid());
     }
 
-    /** Test empty age input */
+    /** 
+     * Test empty age input 
+     */
     @Test
     public void checkAgeRangeEmptyInput() {
         var result = validator.checkAgeRange("", "20");
         assertFalse(result.valid());
     }
+    
+    /**
+     * Test invalid input when one of the ages is negative.
+     */
+    @Test
+    public void checkAgeRangeWithNegativeValues() {
+        var result = validator.checkAgeRange("-5", "-10");
+        assertFalse(result.valid());
+    }
 
-    /** Test valid region input */
+    /** 
+     * Test valid region input 
+     */
     @Test
     public void checkRegionValid() {
         var result = validator.checkRegion("Islay");
         assertTrue(result.valid());
     }
 
-    /** Test when region is empty string */
+    /** 
+     * Test when region is empty string 
+     */
     @Test
     public void checkRegionEmpty() {
         var result = validator.checkRegion("");
         assertFalse(result.valid());
     }
 
-    /** Test when region is null */
+    /** 
+     * Test when region is null 
+     */
     @Test
     public void checkRegionNull() {
         var result = validator.checkRegion(null);
+        assertFalse(result.valid());
+    }
+    
+    /**
+     * Test when region is invalid (e.g. special characters).
+     */
+    @Test
+    public void checkRegionInvalidSpecialChars() {
+        var result = validator.checkRegion("@Highland!");
+        assertFalse(result.valid());
+    }
+    
+    /**
+     * Test when region contains numbers instead of letters.
+     */
+    @Test
+    public void checkRegionContainsNumbers() {
+        var result = validator.checkRegion("12345");
         assertFalse(result.valid());
     }
 }

@@ -16,7 +16,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class WhiskeyDataManagerTest {
 
-    /** Test next() with no records set */
+    /** 
+     * Test next() with no records set
+     */
     @Test
     public void nextWithNoRecordsTest() {
         WhiskeyDataManager wdm = new WhiskeyDataManager(null);
@@ -24,7 +26,9 @@ public class WhiskeyDataManagerTest {
         assertNull(wdm.next());
     }
 
-    /** Test next() with one record (should cycle on itself) */
+    /** 
+     * Test next() with one record (should cycle on itself)
+      */
     @Test
     public void nextWithOneRecordTest() {
         WhiskeyData.WhiskeyDetails d = new WhiskeyData.WhiskeyDetails("Laphroaig", 10, "Islay", 100);
@@ -34,7 +38,9 @@ public class WhiskeyDataManagerTest {
         assertEquals(d, wdm.next());
     }
 
-    /** Test next() with two records going in order */
+    /** 
+     * Test next() with two records going in order 
+     */
     @Test
     public void nextWithTwoRecordsTest() {
         WhiskeyData.WhiskeyDetails d1 = new WhiskeyData.WhiskeyDetails("Lagavulin", 16, "Islay", 110);
@@ -45,7 +51,9 @@ public class WhiskeyDataManagerTest {
         assertEquals(d2, wdm.next());
     }
 
-    /** Test next() with two records wrapping around */
+    /** 
+     * Test next() with two records wrapping around 
+     */
     @Test
     public void nextWithTwoRecordsCyclesTest() {
         WhiskeyData.WhiskeyDetails d1 = new WhiskeyData.WhiskeyDetails("Lagavulin", 16, "Islay", 110);
@@ -57,7 +65,9 @@ public class WhiskeyDataManagerTest {
         assertEquals(d1, wdm.next());
     }
 
-    /** Test previous() with no records set */
+    /** 
+     * Test previous() with no records set 
+     */
     @Test
     public void previousWithNoRecordsTest() {
         WhiskeyDataManager wdm = new WhiskeyDataManager(null);
@@ -65,7 +75,9 @@ public class WhiskeyDataManagerTest {
         assertNull(wdm.previous());
     }
 
-    /** Test previous() with one record (should cycle on itself) */
+    /** 
+     * Test previous() with one record (should cycle on itself) 
+     */
     @Test
     public void previousWithOneRecordTest() {
         WhiskeyData.WhiskeyDetails d = new WhiskeyData.WhiskeyDetails("Tomatin", 12, "Highland", 90);
@@ -75,7 +87,9 @@ public class WhiskeyDataManagerTest {
         assertEquals(d, wdm.previous());
     }
 
-    /** Test previous() with two records going backwards */
+    /** 
+     * Test previous() with two records going backwards 
+     */
     @Test
     public void previousWithTwoRecordsTest() {
         WhiskeyData.WhiskeyDetails d1 = new WhiskeyData.WhiskeyDetails("Lagavulin", 16, "Islay", 110);
@@ -86,7 +100,9 @@ public class WhiskeyDataManagerTest {
         assertEquals(d1, wdm.previous());
     }
 
-    /** Test previous() with two records wrapping around */
+    /** 
+     * Test previous() with two records wrapping around 
+     */
     @Test
     public void previousWithTwoRecordsCyclesTest() {
         WhiskeyData.WhiskeyDetails d1 = new WhiskeyData.WhiskeyDetails("Lagavulin", 16, "Islay", 110);

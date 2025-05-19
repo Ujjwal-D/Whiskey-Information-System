@@ -1,3 +1,7 @@
+/**
+ * module-info for WIS project
+ */
+
 module cqu.wis {
     requires javafx.controls;
     requires javafx.fxml;

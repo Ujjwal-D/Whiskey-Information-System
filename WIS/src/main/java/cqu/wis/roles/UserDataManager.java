@@ -10,7 +10,7 @@ import java.util.Optional;
 
 /**
  * Handles user-related data operations.
- * @author Ujjwal
+ * @author Ujjwal Dhakal 1222900
  */
 
 public class UserDataManager {
@@ -31,5 +31,15 @@ public class UserDataManager {
     */
    public UserDetails findUser(String username) {
        return ud.findUser(username);
+   }
+   
+   /**
+    * Updates the password for the given user.
+    * @param username the username
+    * @param newPassword the new encrypted password
+    * @return true if update was successful
+    */
+   public boolean updatePassword(String username, String newPassword) {
+       return ud.updatePassword(username, newPassword);
    }
 }

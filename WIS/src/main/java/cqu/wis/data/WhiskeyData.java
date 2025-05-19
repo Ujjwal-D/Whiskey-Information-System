@@ -27,7 +27,9 @@ public class WhiskeyData {
      */
     public record WhiskeyDetails(String distillery, int age, String region, int price) {}
 
-    /** Constructor for WhiskeyData */
+    /**
+     * Constructor for WhiskeyData 
+     */
     public WhiskeyData() {}
 
     /**
@@ -93,13 +95,13 @@ public class WhiskeyData {
         try {
             psMaltsFromRegion.setString(1, region);
             ResultSet rs = psMaltsFromRegion.executeQuery();
-            while (rs.next()) {
+            while (rs.next()) { 
                 list.add(new WhiskeyDetails(
                     rs.getString("DISTILLERY"),
                     rs.getInt("AGE"),
                     rs.getString("REGION"),
                     rs.getInt("PRICE")
-                ));
+                )); // details for every whiskey
             }
             rs.close();
         } catch (SQLException e) {

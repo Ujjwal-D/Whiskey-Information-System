@@ -11,7 +11,7 @@ import java.util.*;
 /**
  * Manages whiskey records and navigation for the GUI.
  * 
- * 
+ * @author Ujjwal Dhakal 12222900
  */
 public class WhiskeyDataManager {
 

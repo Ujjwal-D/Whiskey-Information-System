@@ -6,6 +6,8 @@ package cqu.wis.roles;
 
 /**
  * Provides input validation for whiskey-related queries.
+ * 
+ * @author Ujjwal Dhakal 12222900
  */
 public class WhiskeyDataValidator {
 

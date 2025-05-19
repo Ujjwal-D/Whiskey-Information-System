@@ -5,11 +5,11 @@
 package cqu.wis.data;
 
 import java.sql.*;
-import java.util.Optional;
+
 
 /**
  * Represents the user data access layer for authentication.
- * @author Ujjwal
+ * @author Ujjwal Dhakal 12222900
  */
 public class UserData {
     private Connection connection;
@@ -17,6 +17,9 @@ public class UserData {
 
     private final String FIND_USER_QUERY = "SELECT * FROM PASSWORDS WHERE USERNAME = ?";
 
+    /**
+     * Establishes connection to the database
+     */
     public void connect() {
         try {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/USERS", "root", "admin");
@@ -52,5 +55,24 @@ public class UserData {
         }
         return null;
     }
+    
+    /**
+    * Updates the password for a given username in the database.
+    * @param username the username whose password is to be updated
+    * @param newPassword the new encrypted password
+    * @return true if update was successful, false otherwise
+    */
+   public boolean updatePassword(String username, String newPassword) {
+       String updateQuery = "UPDATE PASSWORDS SET PASSWORD = ? WHERE USERNAME = ?";
+       try (PreparedStatement ps = connection.prepareStatement(updateQuery)) {
+           ps.setString(1, newPassword);
+           ps.setString(2, username);
+           int rows = ps.executeUpdate();
+           return rows == 1;
+       } catch (SQLException e) {
+           System.err.println("Update Error: " + e.getMessage());
+           return false;
+       }
+   }
     
 }

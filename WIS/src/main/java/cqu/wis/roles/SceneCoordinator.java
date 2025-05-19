@@ -16,7 +16,9 @@ import javafx.stage.Stage;
  */
 public class SceneCoordinator {
 
-    /** Enum representing keys for each scene. */
+    /** 
+     * Enum representing keys for each scene.
+     */
     public static enum SceneKey {
         LOGIN, PASSWORD, QUERY // More scenes like LOGIN, PASSWORD will be added in future
     }

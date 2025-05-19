@@ -56,20 +56,36 @@ public class LoginController implements Initializable {
     private Label lblMessages;
     @FXML
     private Button btnExit;
+    
     /**
-     * Initializes the controller class.
+     * Initializes the controller class. Automatically called.
+     * 
+     * @param url location to resolve relative path for root object, null if not present
+     * @param rb resources to localize root object, null if not present
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }    
     
+    /**
+     * Dependency injection to controller
+     * 
+     * @param sc    SceneCoordinator reference to switch scene
+     * @param udm   UserDataManager to access and manage user data
+     * @param udv   UserDataValidator to coordinate with validity of data
+     */
     public void inject(SceneCoordinator sc, UserDataManager udm, UserDataValidator udv) {
         this.sc = sc;
         this.udm = udm;
         this.udv = udv;
     }
     
+    /**
+     * Takes action when login button is clicked in GUI
+     * 
+     * @param event click event of Login button
+     */
     @FXML
     private void buttonLoginOnClick(ActionEvent event) {
         String username = txtBoxUsername.getText();
@@ -82,22 +98,34 @@ public class LoginController implements Initializable {
             return;
         }
 
-        // Step 2: Check credentials (Phase 5 requirement)
+        // Step 2: Retrieve user from database
         UserDetails user = udm.findUser(username);
+
+        // Step 3: Credential validation
         ValidationResponse credentialCheck = udv.checkCurrentDetails(user, username, password);
         txtAreaMessages.setText(credentialCheck.message());
 
+        // Step 4: If valid and NOT default password, move to query scene
+        if (credentialCheck.valid() && !"password".equals(user.password())) {
+            sc.setScene(SceneCoordinator.SceneKey.QUERY);
+        }
     }
 
+    /**
+     * Changes the scene to change password
+     * 
+     * @param event event of change password button click 
+     */
     @FXML
     private void buttonChangePasswordOnClick(ActionEvent event) {
+        txtAreaMessages.setText("");
         sc.setScene(SceneCoordinator.SceneKey.PASSWORD);
     }
 
      /**
      * This method clears all the text input and output streams in WIS GUI
      * 
-     * @param event click event of the button
+     * @param event click event of the button clear
      */
     
     @FXML
@@ -110,7 +138,7 @@ public class LoginController implements Initializable {
      /**
      * This method asks for the confirmation to exit 
      * 
-     * @param event click event of button
+     * @param event click event of button exit
      */
     
     @FXML
